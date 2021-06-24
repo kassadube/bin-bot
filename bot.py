@@ -7,13 +7,21 @@ import numpy as np
 
 
 client = Client(config.API_KEY, config.API_SECRET)
-symbolTicker = 'ADAUSDT'
+symbolTicker = 'LINKUSDT'
 #print(client.get_account())
-status = client.get_account_status()
-print(status)
-fees = client.get_trade_fee()
-#print(fees)
-info = client.get_all_isolated_margin_symbols()
-#print(info)
-orders = client.get_open_margin_orders(symbol=symbolTicker, recvWindow=600)
-print(orders)
+
+def _ma50_():
+    
+    ma50_local = 0
+    sum = 0
+
+    klines = client.get_historical_klines(symbolTicker, Client.KLINE_INTERVAL_15MINUTE, "15 hour ago UTC")
+
+    if (len(klines)==60):
+        for i in range (10,60):
+            sum = sum + float(klines[i][4])
+        ma50_local = sum / 50
+
+    return ma50_local
+
+print(_ma50_())
